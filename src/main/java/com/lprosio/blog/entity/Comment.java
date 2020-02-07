@@ -1,18 +1,19 @@
 package com.lprosio.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Collection;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
-public class Article {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -21,14 +22,13 @@ public class Article {
     private String author;
 
     @NotEmpty
-    private String title;
-
-    @NotEmpty
-    @Lob
     private String content;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Collection<Comment> comments;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Article article;
 
 //    @CreationTimestamp
 //    private Calendar createdAt;
@@ -36,9 +36,8 @@ public class Article {
 //    @UpdateTimestamp
 //    private Calendar updatedAt;
 
-    public Article(String author, String title, String content) {
+    public Comment(String author, String content) {
         this.author = author;
-        this.title = title;
         this.content = content;
     }
 }

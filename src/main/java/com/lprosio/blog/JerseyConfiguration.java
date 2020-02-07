@@ -1,6 +1,7 @@
 package com.lprosio.blog;
 
 import com.lprosio.blog.ressources.ArticleRessource;
+import com.lprosio.blog.ressources.CommentRessource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ public class JerseyConfiguration extends ResourceConfig {
     public JerseyConfiguration() {
         register(CorsFilter.class);
         register(ArticleRessource.class);
+        register(CommentRessource.class);
 
         property(ServletProperties.FILTER_FORWARD_ON_404, true);
     }
