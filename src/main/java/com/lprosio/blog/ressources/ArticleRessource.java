@@ -75,13 +75,11 @@ public class ArticleRessource {
     public Response delete(@PathParam("id") long id) {
         Optional<Article> article = repository.findById(id);
         if (!article.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(404).build();
         }
 
         repository.deleteById(id);
 
-        return Response
-                .status(Response.Status.ACCEPTED)
-                .build();
+        return Response.status(200).build();
     }
 }

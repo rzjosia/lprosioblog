@@ -38,8 +38,10 @@
         </form>
     </div>
 
-    <div id="articles">
-    </div>
+    <table class="table table-striped mt-4">
+        <tbody id="articles">
+        </tbody>
+    </table>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -49,33 +51,71 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script src="js/geturl.js"></script>
 <script>
     $(document).ready(function () {
-        function getUrl(path) {
-            var protocol = "http";
-            var appPath = "rest";
-            var host = "localhost";
-            var port = 8082;
-            return protocol + "://" + host + ":" + port + "/" + appPath + path;
+        // Ajouter un article dans dans la page
+        function addArticle(article, delay = 300, inverse = false) {
+            var tr = '<tr id="article_' + article.id + '">' +
+                '<td>' + article.title + '</td>' +
+                '<td><a href="article.html/?id=' + article.id +
+                '" class="btn btn-primary">Lire</a>' +
+                '<button id="article_btn_' + article.id +
+                '" class="btn btn-danger delete" type="button">Supprimer</button>' +
+                '</td>' +
+                '</tr>';
+            if (inverse) {
+                $(tr).hide().prependTo("#articles").fadeIn(delay);
+            } else {
+                $(tr).hide().appendTo("#articles").fadeIn(delay);
+            }
+
         }
 
+        // Supprimer un article
+        $('#articles').on('click', '.delete', function () {
+            var id = $(this).attr('id').match(/article_btn_([\d]+)/i)[1];
+            if (confirm('Voulez-vous vraiement supprimer l\'article ' + id)) {
+
+                $.ajax({
+                    type: "DELETE",
+                    url: getUrl("/article/" + id),
+                    success: function () {
+                        console.log("success");
+                        $('#article_' + id).remove();
+                    }
+                });
+            }
+        });
+
+        var urlParam = new URLSearchParams(window.location.search);
+
+        // Récupérer les article au chargement de la page
         $.ajax({
             type: "GET",
             url: getUrl("/article"),
             dataType: "json",
             success: function (data) {
-                console.log(data);
+                if (data.length === 0) {
+                    $("#articles").after('<tr><td class="text-danger">Aucun article disponible</td></tr>');
+                } else {
+                    $.each(data, function (i, article) {
+                        addArticle(article, i * 300);
+                    });
+                }
             }
         });
 
-        $("#article_form").submit(function(e){
-           e.preventDefault();
 
-           var article = {
-               author: $("#author").val(),
-               title: $("#title").val(),
-               content: $("#content").val(),
-           };
+        // Créer un article
+        $("#article_form").submit(function (e) {
+            e.preventDefault();
+
+            var article = {
+                author: $("#author").val(),
+                title: $("#title").val(),
+                content: $("#content").val(),
+            };
 
             $.ajax({
                 type: "POST",
@@ -84,8 +124,9 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    console.log("Data send");
-                    console.log(data);
+                    alert("L'article vient d'etre ajouter");
+                    addArticle(data, true);
+                    $("#article_form").trigger("reset");
                 }
             });
         });
