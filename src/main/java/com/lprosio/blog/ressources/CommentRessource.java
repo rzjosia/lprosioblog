@@ -26,8 +26,8 @@ public class CommentRessource {
 
 
     /**
-     * Afficher tous les commentaires d'un article
-     * de articleId
+     * Retourne tous les commentaires d'un article
+     * qui ont articleId
      *
      * @return Response
      */
