@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group">
-                <label for="content">Contenue :</label>
+                <label for="content">Contenu :</label>
                 <textarea type="text" name="content" id="content" class="form-control"
                           placeholder="Contenue de l'article" rows="10"></textarea>
             </div>
@@ -58,10 +58,12 @@
         function addArticle(article, delay = 300, inverse = false) {
             var tr = '<tr id="article_' + article.id + '">' +
                 '<td>' + article.title + '</td>' +
-                '<td><a href="article.html?id=' + article.id +
+                '<td><a href="affichage.html?id=' + article.id +
                 '" class="btn btn-primary">Lire</a>' +
                 '<button id="article_btn_' + article.id +
                 '" class="btn btn-danger delete" type="button">Supprimer</button>' +
+                '<a href="article.html?id=' + article.id +
+                '" class="btn btn-primary">Modifier</a>' +
                 '</td>' +
                 '</tr>';
             if (inverse) {
@@ -110,7 +112,7 @@
         // Créer un article
         $("#article_form").submit(function (e) {
             e.preventDefault();
-
+            console.log("submit button clicked");
             var article = {
                 author: $("#author").val(),
                 title: $("#title").val(),

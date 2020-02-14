@@ -94,5 +94,20 @@ public class CommentRessource {
                 .entity(article)
                 .build();
     }
+   /* @PATCH
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("id") long id, Comment comment) {
 
+        Optional<Comment> comment = repository.findById(id);
+
+        if (comment.isPresent() && comment.get().getArticle().getId() == articleId) {
+
+            comment.get().setId(id);
+            Comment resComment = CommentRepository.save(comment);
+        }
+
+        return Response.status(404).build();
+    }*/
 }

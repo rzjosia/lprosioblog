@@ -10,44 +10,41 @@
 </head>
 
 <body>
-
 <div class="container">
-    <a href="./index.html">Revenir</a>
+    <a href="./index.html">Retour</a>
 
     <div id="create_article">
         <form id="article">
-            <h2>Modifier un article</h2>
+            <h2>Article</h2>
             <div class="form-group">
-                <label for="author">Auteur :</label>
-                <input type="text" name="author" id="author" class="form-control" placeholder="Auteur de l'article">
+                <label for="author"><b>Auteur </b></label>
+               <p id="author"></p>
             </div>
 
             <div class="form-group">
-                <label for="title">Titre :</label>
-                <input type="text" name="title" id="title" class="form-control" placeholder="Titre de l'article">
+                <label for="title"><b>Titre </b></label>
+                <p id="title"></p>
             </div>
 
             <div class="form-group">
-                <label for="content">Contenu :</label>
-                <textarea type="text" name="content" id="content" class="form-control"
-                          placeholder="Contenu de l'article" rows="10"></textarea>
+                <label for="content"><b>Contenu </b></label>
+                <p id="content"></p>
             </div>
 
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit">Modifier</button>
-            </div>
+
 
         </form>
     </div>
-
+<br/><br/>
     <div>
         <div class="row bootstrap snippets">
             <div class="col-md-8 col-md-offset-2 col-sm-12">
                 <div class="">
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h2>Commentaire</h2><br/>
+                            <h2>Commentaire</h2>
                         </div>
+                        <br/>
                         <div class="panel-body">
 
                             <form method="post" id="commentForm">
@@ -93,9 +90,9 @@
         var urlParam = new URLSearchParams(queryString);
 
         function refreshArticle(article) {
-            $('#author').val(article.author);
-            $('#title').val(article.title);
-            $('#content').val(article.content);
+            $('#author').text(article.author);
+            $('#title').text(article.title);
+            $('#content').text(article.content);
         }
 
         function commentUser(comment) {
@@ -109,8 +106,7 @@
                 comment.content +
                 '</p>' +
                 '</div>' +
-                '<button class="btn btn-danger btn-xs btnCommentDelete" id="btnCommentDelete' + comment.id +
-                '">supprimer</button>' +
+
                 '</li>';
 
         }
