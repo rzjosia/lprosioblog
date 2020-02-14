@@ -2,12 +2,9 @@ package com.lprosio.blog.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Calendar;
 import java.util.Collection;
 
 @Entity
@@ -29,6 +26,9 @@ public class Article {
     @Lob
     private String content;
 
+    /**
+     * Un article peu contenir plusieurs commentaires
+     */
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Comment> comments;
 

@@ -19,6 +19,7 @@ public class ArticleRessource {
     public Response getAll() {
         Iterable<Article> articles = repository.findAll();
 
+        // On ajoute quelques articles s'il la table est vide
         if (repository.count() <= 0) {
             for (int i = 1; i <= 10; i++) {
                 Article article = new Article("Auteur " + i, "Titre " + i, "Contenu de l'article " + i);
@@ -32,6 +33,12 @@ public class ArticleRessource {
                 .build();
     }
 
+    /**
+     * Créer un article
+     *
+     * @param article Artcle
+     * @return response
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -40,6 +47,12 @@ public class ArticleRessource {
         return Response.status(200).entity(register).build();
     }
 
+    /**
+     * Afficher un article
+     *
+     * @param id long
+     * @return Response
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,12 +67,21 @@ public class ArticleRessource {
                 .build();
     }
 
+    /**
+     * Met à jour un article
+     *
+     * @param id      long
+     * @param article Article
+     * @return Response
+     */
     @PATCH
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(@PathParam("id") long id, Article article) {
         if (!repository.findById(id).isPresent()) {
+
+            // Renvoi un 404 si l'ID de l'article n'existe pas
             return Response.status(404).build();
         }
 
@@ -69,6 +91,12 @@ public class ArticleRessource {
         return Response.status(200).entity(resArticle).build();
     }
 
+    /**
+     * Supprimer un article
+     *
+     * @param id long
+     * @return Response
+     */
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

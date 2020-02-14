@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
+
 @Path("article/{articleId}/comment")
 public class CommentRessource {
 
@@ -24,15 +25,23 @@ public class CommentRessource {
     private long articleId;
 
 
+    /**
+     * Afficher tous les commentaires d'un article
+     * de articleId
+     *
+     * @return Response
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response showAll() {
         Optional<Article> article = articleRepository.findById(articleId);
 
+        // Renvoie un 404 si l'article n'existe pas
         if (!article.isPresent()) {
             return Response.status(404).build();
         }
 
+        // Ajouter quelques commentaires si la table est vide
         if (article.get().getComments().isEmpty()) {
 
             for (int i = 1; i <= 10; i++) {
@@ -50,6 +59,12 @@ public class CommentRessource {
                 .build();
     }
 
+    /**
+     * Ajouter un commentaire
+     *
+     * @param comment Comment
+     * @return Response
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,6 +80,12 @@ public class CommentRessource {
         return Response.status(200).entity(comment).build();
     }
 
+    /**
+     * Supprimer un commentaire
+     *
+     * @param id long
+     * @return Response
+     */
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -79,6 +100,12 @@ public class CommentRessource {
         return Response.status(404).build();
     }
 
+    /**
+     * Afficher un commentaire
+     *
+     * @param id long
+     * @return Response
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
