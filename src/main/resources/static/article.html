@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Lire un article</title>
 </head>
 
 <body>
 
 <div class="container">
-    <a href="/">Revenir</a>
+    <a href="./index.html">Revenir</a>
 
     <div id="create_article">
         <form id="article">
@@ -85,7 +85,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-<script src="/js/geturl.js"></script>
+<script src="js/geturl.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -103,7 +103,6 @@
             return '<li class="media" id="commentBody' + comment.id + '">' +
                 '<div class="media-body">' +
                 '<span class="text-muted pull-right">' +
-                '<small class="text-muted" id="commentDate" + ' + comment.id + '>30 min ago</small>' +
                 '</span>' +
                 '<strong class="text-success" id="commentAuthor"' + comment.id + '>@' + comment.author + '</strong>' +
                 '<p id="commentContent"' + comment.id + '>' +
@@ -116,7 +115,7 @@
 
         }
 
-        // Récupérer les article au chargement de la page
+        // Récupérer l'article au chargement de la page
         $.ajax({
             type: "GET",
             url: getUrl("/article/" + urlParam.get("id")),
@@ -127,18 +126,30 @@
                 } else {
                     console.log(article);
                     refreshArticle(article);
-
-                    $.each(article.comments, function (i, comment) {
-                        $('#commentUser').prepend(commentUser(comment));
-                    });
+                    getComments();
                 }
             },
             error: function (data) {
                 $("#article").append('<tr><td class="text-danger">Aucun article disponible</td></tr>');
                 alert("Aucun article disponible !");
-                window.location.href = "/";
+                window.location.href = "index.html";
             }
         });
+
+        // Récupérer un commentaire
+        function getComments() {
+            $.ajax({
+                type: "GET",
+                url: getUrl("/article/" + urlParam.get("id") + '/comment'),
+                success: function (comments) {
+                    console.log(comments);
+                    $.each(comments, function (i, comment) {
+                        $('#commentUser').prepend(commentUser(comment));
+                    });
+                }
+            });
+        }
+
 
         // Modifier un article
         $("#article").submit(function (e) {

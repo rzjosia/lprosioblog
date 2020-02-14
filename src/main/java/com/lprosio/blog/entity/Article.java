@@ -2,10 +2,12 @@ package com.lprosio.blog.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Calendar;
 import java.util.Collection;
 
 @Entity
@@ -30,15 +32,11 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Comment> comments;
 
-//    @CreationTimestamp
-//    private Calendar createdAt;
-//
-//    @UpdateTimestamp
-//    private Calendar updatedAt;
-
     public Article(String author, String title, String content) {
+        super();
         this.author = author;
         this.title = title;
         this.content = content;
     }
+
 }

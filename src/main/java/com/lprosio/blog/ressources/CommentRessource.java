@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.Optional;
 
 @Path("article/{articleId}/comment")
@@ -24,30 +23,30 @@ public class CommentRessource {
     @PathParam("articleId")
     private long articleId;
 
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response showAll() {
-        if (!articleRepository.findById(articleId).isPresent()) {
+        Optional<Article> article = articleRepository.findById(articleId);
+
+        if (!article.isPresent()) {
             return Response.status(404).build();
         }
 
-        Article article = articleRepository.findById(articleId).get();
-        Collection<Comment> comments = article.getComments();
-
-        if (comments.isEmpty()) {
+        if (article.get().getComments().isEmpty()) {
 
             for (int i = 1; i <= 10; i++) {
-                String author = "Comm Auteur " + i;
-                String content = "Voici un commentaire " + i + " de l'article " + article.getId();
+                String author = "Com Auteur " + i;
+                String content = "Voici un commentaire " + i + " de l'article " + article.get().getId();
                 Comment comment = new Comment(author, content);
-                comment.setArticle(article);
+                comment.setArticle(article.get());
                 repository.save(comment);
             }
         }
 
         return Response
                 .status(Response.Status.CREATED)
-                .entity(comments)
+                .entity(article.get().getComments())
                 .build();
     }
 
@@ -63,7 +62,6 @@ public class CommentRessource {
         comment.setArticle(article);
         repository.save(comment);
 
-
         return Response.status(200).entity(comment).build();
     }
 
@@ -73,13 +71,12 @@ public class CommentRessource {
     public Response delete(@PathParam("id") long id) {
         Optional<Comment> comment = repository.findById(id);
 
-        if (!comment.isPresent() || !articleRepository.findById(articleId).isPresent()) {
-            return Response.status(404).build();
+        if (comment.isPresent() && comment.get().getArticle().getId() == articleId) {
+            repository.deleteById(id);
+            return Response.status(200).build();
         }
 
-        repository.deleteById(id);
-
-        return Response.status(200).build();
+        return Response.status(404).build();
     }
 
     @GET
@@ -91,6 +88,7 @@ public class CommentRessource {
         if (!article.isPresent() || !articleRepository.findById(articleId).isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
         return Response
                 .status(Response.Status.ACCEPTED)
                 .entity(article)

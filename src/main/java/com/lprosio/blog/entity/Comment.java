@@ -37,6 +37,7 @@ public class Comment {
 //    private Calendar updatedAt;
 
     public Comment(String author, String content) {
+        super();
         this.author = author;
         this.content = content;
     }
