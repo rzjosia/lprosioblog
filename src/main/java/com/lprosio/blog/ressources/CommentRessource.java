@@ -50,7 +50,7 @@ public class CommentRessource {
                 .build();
     }
 
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(Comment comment) {

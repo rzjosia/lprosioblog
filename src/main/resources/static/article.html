@@ -184,7 +184,7 @@
             };
 
             $.ajax({
-                type: "POST",
+                type: "PUT",
                 url: getUrl("/article/" + urlParam.get("id") + '/comment'),
                 data: JSON.stringify(comment),
                 contentType: "application/json; charset=utf-8",
